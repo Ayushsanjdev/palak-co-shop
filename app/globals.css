@@ -1,26 +1,83 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ---------------------------------------------------------------------
+   Design tokens for Palak & Co. -- Tailwind v4 style (CSS-based config,
+   no tailwind.config.ts needed). @theme makes these usable as Tailwind
+   utilities too (e.g. bg-accent), while the plain :root vars below still
+   work anywhere as var(--color-accent) for one-off styles.
+
+   NOTE: the font @import above works for a quick start, but for
+   production, switch to next/font/google in layout.tsx -- it self-hosts
+   the font and avoids a render-blocking network request.
+   ------------------------------------------------------------------ */
+@theme {
+  --color-bg: #fbf8f3; /* unbleached canvas */
+  --color-ink: #26201a; /* near-black, warm umber, not pure #000 */
+  --color-surface: #f1eae0; /* card / raised surface */
+  --color-line: #dcd2c1; /* hairline borders */
+  --color-accent: #3d4a34; /* deep olive -- primary actions, links */
+  --color-sale: #b8862e; /* aged brass -- discount badges only */
+
+  --font-display: "Source Serif 4", ui-serif, Georgia, serif;
+  --font-body: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 4px; /* small, consistent -- not the rounded-everything SaaS default */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* Tailwind v4 has no tailwind.config.ts, so dark mode variant is declared
+   here. This makes `dark:` utilities respond to a `.dark` class on <html>
+   (toggled by ThemeToggle.tsx) rather than only the OS-level preference. */
+@custom-variant dark (&:where(.dark, .dark *));
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Same token names, dark values -- everything using var(--color-*) or
+   Tailwind's bg-bg/text-ink/etc utilities re-themes automatically, no
+   per-component dark: classes needed anywhere else. */
+.dark {
+  --color-bg: #1c1815;
+  --color-ink: #ede6da;
+  --color-surface: #262019;
+  --color-line: #3a322a;
+  --color-accent: #8fa37e; /* lighter olive -- keeps contrast on dark bg */
+  --color-sale: #d9a94a;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+/* Visible keyboard focus everywhere -- don't remove this for aesthetics */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }

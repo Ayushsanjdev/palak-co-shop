@@ -1,0 +1,55 @@
+// Standard stack choice: SQLite for now (zero setup, file-based).
+// Swap provider to "postgresql" + add DATABASE_URL when you're ready to deploy
+// somewhere real (Vercel Postgres / Supabase / Neon all work fine with Prisma).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  phone        String    @unique
+  passwordHash String
+  createdAt    DateTime  @default(now())
+  sessions     Session[]
+}
+
+model Session {
+  token     String   @id
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  expiresAt DateTime
+}
+
+model Product {
+  id            String   @id @default(cuid())
+  name          String
+  slug          String   @unique
+  description   String
+  price         Int      // current price, in paise/cents — never store money as float
+  originalPrice Int?     // set only if the item is on sale; null = not discounted
+  imageUrl      String
+  category      String
+  inStock       Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Order {
+  id            String   @id @default(cuid())
+  customerName  String
+  customerPhone String
+  addressLine   String
+  city          String
+  pincode       String
+  items         String   // JSON string of [{productId, name, price, qty}]
+  totalPrice    Int      // paise, snapshot at order time
+  status        String   @default("pending") // pending | confirmed | fulfilled
+  createdAt     DateTime @default(now())
+}

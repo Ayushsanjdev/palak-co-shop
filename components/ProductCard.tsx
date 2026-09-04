@@ -1,8 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 import AddToCartButton from "./AddToCartButton";
 
 interface ProductCardProps {
   id: string;
+  slug: string;
   name: string;
   price: number; // paise
   originalPrice: number | null;
@@ -18,10 +20,12 @@ function formatINR(paise: number) {
   });
 }
 
-// Pure presentation — safe to reuse as-is. The only thing you own here
-// is <AddToCartButton />, rendered inside it.
+// Whole card (except the Add to Cart button) is now one clickable link
+// to the product page -- more forgiving than only the image/title being
+// clickable, and rules out "clicked in the wrong spot" confusion.
 export default function ProductCard({
   id,
+  slug,
   name,
   price,
   originalPrice,
@@ -38,44 +42,48 @@ export default function ProductCard({
       className="group relative flex flex-col"
       style={{ borderRadius: "var(--radius-card)" }}
     >
-      <div
-        className="relative aspect-[4/5] w-full overflow-hidden bg-[var(--color-surface)]"
-        style={{ borderRadius: "var(--radius-card)" }}
-      >
-        <Image
-          src={imageUrl}
-          alt={name}
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 50vw, 25vw"
-        />
-        {isOnSale && (
-          <span
-            className="absolute left-2 top-2 px-2 py-1 text-xs font-medium text-white"
-            style={{
-              background: "var(--color-sale)",
-              borderRadius: "var(--radius-card)",
-            }}
-          >
-            {discountPct}% off
-          </span>
-        )}
-      </div>
+      <Link href={`/products/${slug}`} className="flex flex-col">
+        <div
+          className="relative aspect-[4/5] w-full overflow-hidden bg-[var(--color-surface)]"
+          style={{ borderRadius: "var(--radius-card)" }}
+        >
+          <Image
+            src={imageUrl}
+            alt={name}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 50vw, 25vw"
+          />
+          {isOnSale && (
+            <span
+              className="absolute left-2 top-2 px-2 py-1 text-xs font-medium text-white"
+              style={{
+                background: "var(--color-sale)",
+                borderRadius: "var(--radius-card)",
+              }}
+            >
+              {discountPct}% off
+            </span>
+          )}
+        </div>
 
-      <p className="mt-3 text-xs uppercase tracking-wide text-neutral-500">
-        {category}
-      </p>
-      <h3 className="text-sm font-medium">{name}</h3>
+        <p className="mt-3 text-xs uppercase tracking-wide text-neutral-500">
+          {category}
+        </p>
+        <h3 className="text-sm font-medium">{name}</h3>
 
-      <div className="mt-1 flex items-baseline gap-2">
-        <span className="text-sm font-semibold">{formatINR(price)}</span>
-        {isOnSale && (
-          <span className="text-xs text-neutral-400 line-through">
-            {formatINR(originalPrice as number)}
-          </span>
-        )}
-      </div>
+        <div className="mt-1 flex items-baseline gap-2">
+          <span className="text-sm font-semibold">{formatINR(price)}</span>
+          {isOnSale && (
+            <span className="text-xs text-neutral-400 line-through">
+              {formatINR(originalPrice as number)}
+            </span>
+          )}
+        </div>
+      </Link>
 
+      {/* Outside the Link on purpose -- clicking Add to Cart must not
+          also trigger navigation to the product page. */}
       <AddToCartButton
         productId={id}
         name={name}

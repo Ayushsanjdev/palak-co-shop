@@ -74,6 +74,7 @@ export const useCartStore = create<CartState>()(
     }),
     {
       name: "cart-storage", // localStorage key -- survives page refresh
+      skipHydration: true, // avoids SSR/client mismatch -- see CartHydration.tsx
     },
   ),
 );

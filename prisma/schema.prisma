@@ -1,14 +1,16 @@
-// Standard stack choice: SQLite for now (zero setup, file-based).
-// Swap provider to "postgresql" + add DATABASE_URL when you're ready to deploy
-// somewhere real (Vercel Postgres / Supabase / Neon all work fine with Prisma).
+// Switched to Postgres for deployment (SQLite's file-based storage
+// doesn't survive Vercel's ephemeral serverless filesystem). Point
+// DATABASE_URL at Neon/Supabase/Vercel Postgres -- locally, either run a
+// local Postgres too, or point your local .env at the same hosted DB.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -16,6 +18,7 @@ model User {
   name         String
   phone        String    @unique
   passwordHash String
+  isAdmin      Boolean   @default(false)
   createdAt    DateTime  @default(now())
   sessions     Session[]
 }
@@ -36,7 +39,8 @@ model Product {
   originalPrice Int?     // set only if the item is on sale; null = not discounted
   imageUrl      String
   category      String
-  inStock       Boolean  @default(true)
+  stock         Int      @default(0)  // quantity on hand -- what your father updates
+  inStock       Boolean  @default(true) // manual override, e.g. discontinuing a bag even with stock left
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }

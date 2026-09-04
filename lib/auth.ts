@@ -38,6 +38,15 @@ export async function getUserFromToken(token: string | undefined) {
   return session.user;
 }
 
+// Use in any admin API route/page: returns the user if they're logged
+// in AND flagged isAdmin, otherwise null -- caller decides what to do
+// (redirect, 403, etc).
+export async function getAdminFromToken(token: string | undefined) {
+  const user = await getUserFromToken(token);
+  if (!user?.isAdmin) return null;
+  return user;
+}
+
 export async function deleteSession(token: string | undefined) {
   if (!token) return;
   await db.session.delete({ where: { token } }).catch(() => {});

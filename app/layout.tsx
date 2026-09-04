@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import Header from "@/components/Header";
 import LoginModal from "@/components/LoginModal";
 import AuthProvider from "@/components/AuthProvider";
+import CartHydration from "@/components/CartHydration";
 import { LanguageProvider } from "@/lib/i18n/language-context";
 import { themeInitScript } from "@/lib/theme-script";
 
@@ -21,6 +22,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className="min-h-screen" suppressHydrationWarning>
         <LanguageProvider>
           <AuthProvider>
+            <CartHydration />
             <Header />
             {children}
             {/* Mounted once here so any button anywhere can trigger it via

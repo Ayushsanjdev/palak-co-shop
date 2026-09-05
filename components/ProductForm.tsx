@@ -9,6 +9,10 @@ export interface ProductFormValues {
   name: string;
   description: string;
   category: string;
+  material: string;
+  color: string;
+  size: string;
+  pattern: string;
   price: string; // rupees, as typed -- converted to paise on submit
   originalPrice: string; // rupees, optional
   stock: string;
@@ -88,6 +92,10 @@ export default function ProductForm({ initial, mode }: ProductFormProps) {
       name: values.name.trim(),
       description: values.description.trim(),
       category: values.category.trim(),
+      material: values.material.trim() || null,
+      color: values.color.trim() || null,
+      size: values.size.trim() || null,
+      pattern: values.pattern.trim() || null,
       price: Math.round(Number(values.price) * 100),
       originalPrice: values.originalPrice
         ? Math.round(Number(values.originalPrice) * 100)
@@ -170,6 +178,52 @@ export default function ProductForm({ initial, mode }: ProductFormProps) {
           className={inputClass}
           style={inputStyle}
         />
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className={labelClass}>Material (optional)</label>
+          <input
+            value={values.material}
+            onChange={(e) => set("material", e.target.value)}
+            placeholder="e.g. Canvas, Leather, Jute"
+            className={inputClass}
+            style={inputStyle}
+          />
+        </div>
+        <div>
+          <label className={labelClass}>Color (optional)</label>
+          <input
+            value={values.color}
+            onChange={(e) => set("color", e.target.value)}
+            placeholder="e.g. Brown, Black"
+            className={inputClass}
+            style={inputStyle}
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className={labelClass}>Size (optional)</label>
+          <input
+            value={values.size}
+            onChange={(e) => set("size", e.target.value)}
+            placeholder="e.g. Small, Medium, Large"
+            className={inputClass}
+            style={inputStyle}
+          />
+        </div>
+        <div>
+          <label className={labelClass}>Design (optional)</label>
+          <input
+            value={values.pattern}
+            onChange={(e) => set("pattern", e.target.value)}
+            placeholder="e.g. Plain, Printed, Woven"
+            className={inputClass}
+            style={inputStyle}
+          />
+        </div>
       </div>
 
       <div>

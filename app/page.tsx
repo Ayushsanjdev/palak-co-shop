@@ -23,6 +23,8 @@ interface Product {
   originalPrice: number | null;
   imageUrl: string;
   category: string;
+  material: string | null;
+  color: string | null;
 }
 
 export default function HomePage() {
@@ -107,6 +109,8 @@ export default function HomePage() {
                 originalPrice={p.originalPrice}
                 imageUrl={p.imageUrl}
                 category={p.category}
+                material={p.material}
+                color={p.color}
               />
             ))}
           </div>
@@ -127,6 +131,8 @@ export default function HomePage() {
               originalPrice={p.originalPrice}
               imageUrl={p.imageUrl}
               category={p.category}
+              material={p.material}
+              color={p.color}
             />
           ))}
         </div>

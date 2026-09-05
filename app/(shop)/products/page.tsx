@@ -12,6 +12,8 @@ interface Product {
   originalPrice: number | null;
   imageUrl: string;
   category: string;
+  material: string | null;
+  color: string | null;
 }
 
 // Client Component -- needs interactive search/filter, so data comes
@@ -106,6 +108,8 @@ export default function ProductsPage() {
               originalPrice={p.originalPrice}
               imageUrl={p.imageUrl}
               category={p.category}
+              material={p.material}
+              color={p.color}
             />
           ))}
         </div>

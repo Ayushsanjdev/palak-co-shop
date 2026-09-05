@@ -28,6 +28,10 @@ export default async function EditProductPage({
           name: product.name,
           description: product.description,
           category: product.category,
+          material: product.material ?? "",
+          color: product.color ?? "",
+          size: product.size ?? "",
+          pattern: product.pattern ?? "",
           price: (product.price / 100).toString(),
           originalPrice: product.originalPrice
             ? (product.originalPrice / 100).toString()

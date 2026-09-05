@@ -10,6 +10,8 @@ interface ProductCardProps {
   originalPrice: number | null;
   imageUrl: string;
   category: string;
+  material?: string | null;
+  color?: string | null;
 }
 
 function formatINR(paise: number) {
@@ -31,6 +33,8 @@ export default function ProductCard({
   originalPrice,
   imageUrl,
   category,
+  material,
+  color,
 }: ProductCardProps) {
   const isOnSale = !!originalPrice && originalPrice > price;
   const discountPct = isOnSale
@@ -71,6 +75,11 @@ export default function ProductCard({
           {category}
         </p>
         <h3 className="text-sm font-medium">{name}</h3>
+        {(material || color) && (
+          <p className="text-xs text-neutral-500">
+            {[material, color].filter(Boolean).join(" · ")}
+          </p>
+        )}
 
         <div className="mt-1 flex items-baseline gap-2">
           <span className="text-sm font-semibold">{formatINR(price)}</span>

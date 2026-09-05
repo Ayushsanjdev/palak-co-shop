@@ -39,6 +39,10 @@ model Product {
   originalPrice Int?     // set only if the item is on sale; null = not discounted
   imageUrl      String
   category      String
+  material      String?  // e.g. Canvas, Leather, Jute, Nylon
+  color         String?  // e.g. Brown, Black, Olive
+  size          String?  // e.g. Small, Medium, Large -- or actual dimensions
+  pattern       String?  // e.g. Plain, Printed, Embossed -- optional design detail
   stock         Int      @default(0)  // quantity on hand -- what your father updates
   inStock       Boolean  @default(true) // manual override, e.g. discontinuing a bag even with stock left
   createdAt     DateTime @default(now())

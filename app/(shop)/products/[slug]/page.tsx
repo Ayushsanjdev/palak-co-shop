@@ -180,6 +180,63 @@ export default async function ProductDetailPage({
         </p>
       </div>
 
+      {/* Specifications -- only shows rows that actually have a value */}
+      {(product.material ||
+        product.color ||
+        product.size ||
+        product.pattern) && (
+        <div
+          className="mt-8 border-t pt-6"
+          style={{ borderColor: "var(--color-line)" }}
+        >
+          <h2 className="font-display mb-3 text-lg">Product Details</h2>
+          <table className="w-full max-w-md text-sm">
+            <tbody>
+              {product.material && (
+                <tr
+                  className="border-b"
+                  style={{ borderColor: "var(--color-line)" }}
+                >
+                  <td className="py-2 pr-4 text-neutral-500">Material</td>
+                  <td className="py-2">{product.material}</td>
+                </tr>
+              )}
+              {product.color && (
+                <tr
+                  className="border-b"
+                  style={{ borderColor: "var(--color-line)" }}
+                >
+                  <td className="py-2 pr-4 text-neutral-500">Color</td>
+                  <td className="py-2">{product.color}</td>
+                </tr>
+              )}
+              {product.size && (
+                <tr
+                  className="border-b"
+                  style={{ borderColor: "var(--color-line)" }}
+                >
+                  <td className="py-2 pr-4 text-neutral-500">Size</td>
+                  <td className="py-2">{product.size}</td>
+                </tr>
+              )}
+              {product.pattern && (
+                <tr
+                  className="border-b"
+                  style={{ borderColor: "var(--color-line)" }}
+                >
+                  <td className="py-2 pr-4 text-neutral-500">Design</td>
+                  <td className="py-2">{product.pattern}</td>
+                </tr>
+              )}
+              <tr>
+                <td className="py-2 pr-4 text-neutral-500">Category</td>
+                <td className="py-2">{product.category}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      )}
+
       {/* Related products */}
       {related.length > 0 && (
         <div
@@ -198,6 +255,8 @@ export default async function ProductDetailPage({
                 originalPrice={p.originalPrice}
                 imageUrl={p.imageUrl}
                 category={p.category}
+                material={p.material}
+                color={p.color}
               />
             ))}
           </div>

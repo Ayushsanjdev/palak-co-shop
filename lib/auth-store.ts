@@ -1,17 +1,16 @@
 import { create } from "zustand";
 
-// Client-side reflection of server auth state -- the actual source of
-// truth is the httpOnly session cookie + Session table (see lib/auth.ts,
-// app/api/auth/*). This store just mirrors that so components can react
-// to it; it never stores a password or trusts itself to decide who's
-// logged in. AuthProvider.tsx calls setUser() on app load by hitting
-// /api/auth/me, and login()/logout() below call the real endpoints.
+// Client-side reflection of server auth state -- source of truth is the
+// httpOnly session cookie + Session table (see lib/auth.ts, app/api/auth/*).
 interface AuthState {
   isLoggedIn: boolean;
   name: string | null;
   phone: string | null;
+  isAdmin: boolean;
   isLoading: boolean;
-  setUser: (user: { name: string; phone: string } | null) => void;
+  setUser: (
+    user: { name: string; phone: string; isAdmin?: boolean } | null,
+  ) => void;
   login: (args: {
     name?: string;
     phone: string;
@@ -24,6 +23,7 @@ export const useAuthStore = create<AuthState>()((set) => ({
   isLoggedIn: false,
   name: null,
   phone: null,
+  isAdmin: false,
   isLoading: true,
 
   setUser: (user) =>
@@ -33,9 +33,16 @@ export const useAuthStore = create<AuthState>()((set) => ({
             isLoggedIn: true,
             name: user.name,
             phone: user.phone,
+            isAdmin: !!user.isAdmin,
             isLoading: false,
           }
-        : { isLoggedIn: false, name: null, phone: null, isLoading: false },
+        : {
+            isLoggedIn: false,
+            name: null,
+            phone: null,
+            isAdmin: false,
+            isLoading: false,
+          },
     ),
 
   login: async ({ name, phone, password }) => {
@@ -55,6 +62,7 @@ export const useAuthStore = create<AuthState>()((set) => ({
       isLoggedIn: true,
       name: user.name,
       phone: user.phone,
+      isAdmin: !!user.isAdmin,
       isLoading: false,
     });
     return { ok: true };
@@ -62,6 +70,6 @@ export const useAuthStore = create<AuthState>()((set) => ({
 
   logout: async () => {
     await fetch("/api/auth/logout", { method: "POST" });
-    set({ isLoggedIn: false, name: null, phone: null });
+    set({ isLoggedIn: false, name: null, phone: null, isAdmin: false });
   },
 }));

@@ -17,6 +17,7 @@ export default function Header() {
   const cartCount = useCartStore((s) => s.totalCount());
   const openLogin = useAuthModalStore((s) => s.open);
   const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
+  const isAdmin = useAuthStore((s) => s.isAdmin);
   const logout = useAuthStore((s) => s.logout);
   const { t } = useLanguage();
 
@@ -31,9 +32,23 @@ export default function Header() {
       style={{ borderColor: "var(--color-line)" }}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-        <Link href="/" className="font-display text-lg">
-          Palak & Co.
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link href="/" className="font-display text-lg">
+            Palak & Co.
+          </Link>
+          {isAdmin && (
+            <span
+              className="text-xs font-medium text-white"
+              style={{
+                background: "var(--color-accent)",
+                borderRadius: "999px",
+                padding: "2px 8px",
+              }}
+            >
+              Admin mode
+            </span>
+          )}
+        </div>
 
         {/* Desktop nav */}
         <nav className="hidden gap-6 text-sm sm:flex">

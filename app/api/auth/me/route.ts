@@ -8,5 +8,9 @@ export async function GET() {
   const user = await getUserFromToken(token);
 
   if (!user) return NextResponse.json(null);
-  return NextResponse.json({ name: user.name, phone: user.phone });
+  return NextResponse.json({
+    name: user.name,
+    phone: user.phone,
+    isAdmin: user.isAdmin,
+  });
 }

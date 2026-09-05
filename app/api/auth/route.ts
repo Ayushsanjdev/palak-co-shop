@@ -44,7 +44,11 @@ export async function POST(request: Request) {
 
   const { token, expiresAt } = await createSession(user.id);
 
-  const res = NextResponse.json({ name: user.name, phone: user.phone });
+  const res = NextResponse.json({
+    name: user.name,
+    phone: user.phone,
+    isAdmin: user.isAdmin,
+  });
   res.cookies.set(SESSION_COOKIE_NAME, token, {
     httpOnly: true, // not readable from client JS -- this is what makes it real
     secure: process.env.NODE_ENV === "production",

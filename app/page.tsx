@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import CategoryRail from "@/components/CategoryRail";
 import { useLanguage } from "@/lib/i18n/language-context";
+import { useAuthStore } from "@/lib/auth-store";
 
 // NOTE: switched this from a Server Component to a Client Component
 // because it now needs useLanguage() for the tagline/section titles.
@@ -25,6 +27,7 @@ interface Product {
 
 export default function HomePage() {
   const { t, lang } = useLanguage();
+  const isAdmin = useAuthStore((s) => s.isAdmin);
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
@@ -40,6 +43,29 @@ export default function HomePage() {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+      {isAdmin && (
+        <div
+          className="mb-6 flex items-center justify-between border px-4 py-3"
+          style={{
+            borderColor: "var(--color-line)",
+            borderRadius: "var(--radius-card)",
+            background: "var(--color-surface)",
+          }}
+        >
+          <span className="text-sm">You&apos;re in admin mode.</span>
+          <Link
+            href="/admin/products"
+            className="px-4 py-2 text-sm font-medium text-white"
+            style={{
+              background: "var(--color-accent)",
+              borderRadius: "var(--radius-card)",
+            }}
+          >
+            Update stocks
+          </Link>
+        </div>
+      )}
+
       {/* Hero */}
       <section
         className="mb-10 border-b pb-8"

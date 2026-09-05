@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import ProductCard from "@/components/ProductCard";
-import CategoryRail from "@/components/CategoryRail";
 
 interface Product {
   id: string;
